@@ -103,7 +103,7 @@ try collection.execute(collection.commands.first!, with: "/example param1: false
 //-------------------------------------------
 ```
 Errorhandling
-```
+```swift
 //the following errors can be thrown
 public enum CommandError: Error, Equatable{
     case missingParameter
