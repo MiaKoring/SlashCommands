@@ -18,15 +18,15 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "SlashCommands",
-            targets: ["SwiftSlashCommands"]),
+            targets: ["SlashCommands"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "SwiftSlashCommands"),
+            name: "SlashCommands"),
         .testTarget(
-            name: "SwiftSlashCommandsTests",
-            dependencies: ["SwiftSlashCommands"]),
+            name: "SlashCommandsTests",
+            dependencies: ["SlashCommands"]),
     ]
 )
