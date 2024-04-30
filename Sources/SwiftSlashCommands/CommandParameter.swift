@@ -4,15 +4,22 @@ import Foundation
 ///used /commandname parametername: value
 public struct CommandParameter {
     ///to sort parameters
-    var id: Int
+    public var id: Int
     
     ///parametername
     ///used /commandname parametername: value
-    var name: String
+    public var name: String
     
     ///the expected datatype
-    var datatype: CommandParameterDatatype
+    public var datatype: CommandParameterDatatype
     
     ///is the parameter required to execute the command
-    var required: Bool
+    public var required: Bool
+    
+    public init(id: Int, name: String, datatype: CommandParameterDatatype, required: Bool) {
+        self.id = id
+        self.name = name
+        self.datatype = datatype
+        self.required = required
+    }
 }
