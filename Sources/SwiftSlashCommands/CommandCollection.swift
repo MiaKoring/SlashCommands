@@ -3,7 +3,7 @@ import Foundation
 ///contains commands and handles execution
 public final class CommandCollection {
     ///collection of commands
-    var commands: [Command]
+    public var commands: [Command]
     
     public init(commands: [Command] = []) {
         self.commands = commands
