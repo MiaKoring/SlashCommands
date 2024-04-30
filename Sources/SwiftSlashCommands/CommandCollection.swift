@@ -10,7 +10,7 @@ public final class CommandCollection {
     }
     
     ///returns all commands that start with the input
-    public func commands(for string: String, highestPermission: Permission)throws -> [Command]{
+    public func commands(for string: String, highestPermission: Permission)-> [Command]{
         //if input doesn't start with "/", its not a valid command
         if string.first != "/" { return [] }
         
