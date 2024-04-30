@@ -5,7 +5,7 @@ public final class CommandCollection {
     ///collection of commands
     var commands: [Command]
     
-    init(commands: [Command] = []) {
+    public init(commands: [Command] = []) {
         self.commands = commands
     }
     
