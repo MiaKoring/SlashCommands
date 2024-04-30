@@ -8,11 +8,11 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
-        let commands = try collection.commands(for: "/", highestPermission: .none)
+        let commands = collection.commands(for: "/", highestPermission: .none)
         print("\n\n Commands: \(commands)")
         XCTAssertTrue(commands.first?.command == "low" && commands.count == 1)
         
-        let superLow = try collection.commands(for: "/", highestPermission: .muted)
+        let superLow = collection.commands(for: "/", highestPermission: .muted)
         XCTAssertTrue(superLow.isEmpty)
     }
     
@@ -39,11 +39,11 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
-        let commands = try collection.commands(for: "/", highestPermission: .admin)
+        let commands = collection.commands(for: "/", highestPermission: .admin)
         print("\n\n Commands: \(commands)")
         XCTAssertTrue(commands.contains(where: {$0.command == "low"}) && commands.contains(where: {$0.command == "high"}) && commands.contains(where: {$0.command == "noParam"}) && commands.count == 3)
         
-        let superLow = try collection.commands(for: "/", highestPermission: .kick)
+        let superLow = collection.commands(for: "/", highestPermission: .kick)
         print("\n\n Commands: \(superLow)")
         XCTAssertTrue(superLow.contains(where: {$0.command == "low"}) && superLow.contains(where: {$0.command == "noParam"}) && superLow.count == 2)
     }
