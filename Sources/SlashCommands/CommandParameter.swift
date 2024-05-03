@@ -19,9 +19,10 @@ public struct CommandParameter {
     ///is the parameter required to execute the command
     public var required: Bool
     
-    public init(id: Int, name: String, datatype: CommandParameterDatatype, required: Bool) {
+    public init(id: Int, name: String, description: String, datatype: CommandParameterDatatype, required: Bool) {
         self.id = id
         self.name = name
+        self.description = description
         self.datatype = datatype
         self.required = required
     }
