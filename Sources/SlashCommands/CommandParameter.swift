@@ -10,6 +10,9 @@ public struct CommandParameter {
     ///used /commandname parametername: value
     public var name: String
     
+    ///a description that gets displayed when the parameter is selected
+    public var description: String
+    
     ///the expected datatype
     public var datatype: CommandParameterDatatype
     
