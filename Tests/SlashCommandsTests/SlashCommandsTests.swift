@@ -154,10 +154,10 @@ class LowPermission: Command {
     var description: String = "testLow"
     
     var parameters: [CommandParameter] = [
-        CommandParameter(id: 0, name: "param1", datatype: .bool, required: true),
-        CommandParameter(id: 1, name: "param2", datatype: .int, required: false),
-        CommandParameter(id: 2, name: "param3", datatype: .double, required: true),
-        CommandParameter(id: 3, name: "param4", datatype: .string, required: true)
+        CommandParameter(id: 0, name: "param1", description: "", datatype: .bool, required: true),
+        CommandParameter(id: 1, name: "param2", description: "", datatype: .int, required: false),
+        CommandParameter(id: 2, name: "param3", description: "", datatype: .double, required: true),
+        CommandParameter(id: 3, name: "param4", description: "", datatype: .string, required: true)
     ]
     
     var minPermissions: Permission = .none
@@ -202,10 +202,10 @@ class HighPermission: Command {
     var description: String = "testHigh"
     
     var parameters: [CommandParameter] = [
-        CommandParameter(id: 0, name: "param1", datatype: .bool, required: true),
-        CommandParameter(id: 1, name: "param2", datatype: .int, required: false),
-        CommandParameter(id: 2, name: "param3", datatype: .double, required: true),
-        CommandParameter(id: 3, name: "param4", datatype: .string, required: true)
+        CommandParameter(id: 0, name: "param1", description: "", datatype: .bool, required: true),
+        CommandParameter(id: 1, name: "param2", description: "", datatype: .int, required: false),
+        CommandParameter(id: 2, name: "param3", description: "", datatype: .double, required: true),
+        CommandParameter(id: 3, name: "param4", description: "", datatype: .string, required: true)
     ]
     
     var minPermissions: Permission = .ban
