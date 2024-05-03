@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Permission: Int, Equatable {
+public enum Permission: Int, Equatable, Codable {
     case muted ///User is muted
     case none ///allowed to send messages
     case mute ///allowed to mute others

@@ -2,7 +2,7 @@ import Foundation
 
 ///a parameter of a command
 ///used /commandname parametername: value
-public struct CommandParameter: Hashable {
+public struct CommandParameter: Hashable, Codable {
     ///to sort parameters
     public var id: Int
     
