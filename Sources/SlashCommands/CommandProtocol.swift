@@ -2,7 +2,10 @@ import Foundation
 
 ///to create and use commands with this library
 ///they must conform to this protocol
-public protocol Command {
+public protocol Command: Identifiable {
+    
+    var id: UUID { get }
+    
     ///commandname, used /commandname
     var command: String { get }
     

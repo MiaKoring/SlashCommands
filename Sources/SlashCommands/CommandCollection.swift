@@ -3,14 +3,14 @@ import Foundation
 ///contains commands and handles execution
 public final class CommandCollection {
     ///collection of commands
-    public var commands: [Command]
+    public var commands: [any Command]
     
-    public init(commands: [Command] = []) {
+    public init(commands: [any Command] = []) {
         self.commands = commands
     }
     
     ///returns all commands that start with the input
-    public func commands(for string: String, highestPermission: Permission)-> [Command]{
+    public func commands(for string: String, highestPermission: Permission)-> [any Command]{
         //if input doesn't start with "/", its not a valid command
         if string.first != "/" { return [] }
         
@@ -25,7 +25,7 @@ public final class CommandCollection {
         })
     }
     
-    public func execute(_ command: Command, with string: String, highestPermission: Permission)throws {
+    public func execute(_ command: any Command, with string: String, highestPermission: Permission)throws {
         if string.first != "/" { throw CommandError.missingSlash }
         if command.minPermissions.rawValue > highestPermission.rawValue { throw CommandError.insufficientPermissions }
         
@@ -67,7 +67,7 @@ public final class CommandCollection {
     }
     
     ///generate the regex to parse the parameters
-    private func genCommandRegex(for command: Command)-> String {
+    private func genCommandRegex(for command: any Command)-> String {
         var closure = ""
         for i in 0 ..< command.parameters.count {
             closure += " \(command.parameters[i].name):"

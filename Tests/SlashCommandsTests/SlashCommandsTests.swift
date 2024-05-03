@@ -144,6 +144,7 @@ final class SwiftSlashCommandsTests: XCTestCase {
 }
 
 class LowPermission: Command {
+    var id: UUID = UUID()
     
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
@@ -193,6 +194,8 @@ class LowPermission: Command {
 }
 
 class HighPermission: Command {
+    var id: UUID = UUID()
+    
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
     }
@@ -238,6 +241,8 @@ class HighPermission: Command {
 }
 
 class NoParam: Command {
+    var id: UUID = UUID()
+    
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
     }
