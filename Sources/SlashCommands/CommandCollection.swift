@@ -70,7 +70,7 @@ public final class CommandCollection {
     private func genCommandRegex(for command: Command)-> String {
         var closure = ""
         for i in 0 ..< command.parameters.count {
-            closure += " \(command.parameters[i].name): "
+            closure += " \(command.parameters[i].name):"
             if i < command.parameters.count - 1 {
                 closure += "|"
             }
@@ -109,7 +109,8 @@ public final class CommandCollection {
     }
     
     ///tries to convert a value to the required type, returns on success
-    private func paramValue(with type: CommandParameterDatatype, for valueString: String, named name: String)throws -> Any {
+    private func paramValue(with type: CommandParameterDatatype, for valString: String, named name: String)throws -> Any {
+        let valueString = valString.trimmingCharacters(in: .whitespacesAndNewlines)
         switch type {
         case .int:
             guard let value = Int(valueString) else{
@@ -141,7 +142,7 @@ public final class CommandCollection {
             let name = String(match[match.startIndex...nameEndIndex])
             let type = parameters.first(where: {$0.name == name})!.datatype
             
-            let valueStartIndex = match.index(match.firstIndex(of: ":")!, offsetBy: 2)
+            let valueStartIndex = match.index(match.firstIndex(of: ":")!, offsetBy: 1)
             let valueString = String(match[valueStartIndex ..< match.endIndex])
             
             let value = try paramValue(with: type, for: valueString, named: name)

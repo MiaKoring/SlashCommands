@@ -6,6 +6,8 @@ public protocol Command {
     ///commandname, used /commandname
     var command: String { get }
     
+    var description: String { get }
+    
     ///command parameters, used /commandname parameter: value
     var parameters: [CommandParameter] { get }
     

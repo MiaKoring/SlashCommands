@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwiftSlashCommands
+@testable import SlashCommands
 
 final class SwiftSlashCommandsTests: XCTestCase {
     func testGetCommandsWithLowPermissions()throws {
@@ -22,7 +22,7 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
-        try collection.execute(collection.commands.first!, with: "/low param1: false param2: 1 param3: 1.1 param4: Lol", highestPermission: .none)
+        try collection.execute(collection.commands.first!, with: "/low param1:false param2:1 param3: 1.1 param4: Lol", highestPermission: .none)
         
         do {
             try collection.execute(collection.commands.first!, with: "/low param1: false param2: 1 param3: 1.1 param4: Lol", highestPermission: .muted)
@@ -143,12 +143,15 @@ final class SwiftSlashCommandsTests: XCTestCase {
     }
 }
 
-class LowPermission: Command{
+class LowPermission: Command {
+    
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
     }
     
     var command: String = "low"
+    
+    var description: String = "testLow"
     
     var parameters: [CommandParameter] = [
         CommandParameter(id: 0, name: "param1", datatype: .bool, required: true),
@@ -196,6 +199,8 @@ class HighPermission: Command {
     
     var command: String = "high"
     
+    var description: String = "testHigh"
+    
     var parameters: [CommandParameter] = [
         CommandParameter(id: 0, name: "param1", datatype: .bool, required: true),
         CommandParameter(id: 1, name: "param2", datatype: .int, required: false),
@@ -239,9 +244,11 @@ class NoParam: Command {
     
     var command: String = "noParam"
     
-    var parameters: [SwiftSlashCommands.CommandParameter] = []
+    var description: String = "testNoParam"
     
-    var minPermissions: SwiftSlashCommands.Permission = .kick
+    var parameters: [CommandParameter] = []
+    
+    var minPermissions: Permission = .kick
     
     var commandOwner: String = "SwiftSlashCommands"
     
