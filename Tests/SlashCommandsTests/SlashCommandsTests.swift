@@ -22,10 +22,10 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
-        try collection.execute(collection.commands.first!, with: "/low param1:false param2:1 param3: 1.1 param4: Lol", highestPermission: .none)
+        try collection.execute(collection.commands.first!, with: "/low param1:false param2:1 param3: 13.2 param4: Lol", highestPermission: .none)
         
         do {
-            try collection.execute(collection.commands.first!, with: "/low param1: false param2: 1 param3: 1.1 param4: Lol", highestPermission: .muted)
+            try collection.execute(collection.commands.first!, with: "/low param1: false param2: 1 param3: 13.2 param4: Lol", highestPermission: .muted)
             XCTAssertTrue(false)
         } catch let error {
             let cmdError = error as? CommandError
@@ -54,10 +54,10 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
-        try collection.execute(collection.commands[1], with: "/high param1: false param2: 1 param3: 1.1 param4: Lol", highestPermission: .admin)
+        try collection.execute(collection.commands[1], with: "/high param1: false param2: 1 param3: 13.2 param4: Lol", highestPermission: .admin)
         
         do {
-            try collection.execute(collection.commands[1], with: "/high param1: false param2: 1 param3: 1.1 param4: Lol", highestPermission: .muted)
+            try collection.execute(collection.commands[1], with: "/high param1: false param2: 1 param3: 13.2 param4: Lol", highestPermission: .muted)
             XCTAssertTrue(false)
         } catch let error {
             let cmdError = error as? CommandError
@@ -72,7 +72,7 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(NoParam(completion: NoParam.complete))
         
         do{
-            try collection.execute(collection.commands.first!, with: "/high param1: false param2: 1 param3: 1.1 param4: Lol", highestPermission: .admin)
+            try collection.execute(collection.commands.first!, with: "/high param1: false param2: 1 param3: 13.2 param4: Lol", highestPermission: .admin)
             XCTAssertTrue(false)
         }
         catch let error {
@@ -97,7 +97,7 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
-        try collection.execute(collection.commands.first!, with: "/low param1: false param3: 1.1 param4: Lol", highestPermission: .none)
+        try collection.execute(collection.commands.first!, with: "/low param1: false param3: 13.2 param4: Lol", highestPermission: .none)
     }
     
     func testNotUsingRequiredParam()throws {
@@ -107,7 +107,7 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(NoParam(completion: NoParam.complete))
         
         do{
-            try collection.execute(collection.commands.first!, with: "/low param1: false param3: 1.1", highestPermission: .none)
+            try collection.execute(collection.commands.first!, with: "/low param1: false param3: 13.2", highestPermission: .none)
         } catch let error {
             let cmdError = error as? CommandError
             XCTAssertTrue(cmdError == CommandError.missingParameter)
@@ -121,24 +121,38 @@ final class SwiftSlashCommandsTests: XCTestCase {
         collection.commands.append(NoParam(completion: NoParam.complete))
         
         do{
-            try collection.execute(collection.commands.first!, with: "/low param1: abc param3: 1.1 param4: Lol", highestPermission: .none)
+            try collection.execute(collection.commands.first!, with: "/low param1: abc param3: 13.2 param4: Lol", highestPermission: .none)
         } catch let error {
             let cmdError = error as? CommandError
-            XCTAssertTrue(cmdError == CommandError.paramInvalidType("param1"))
+            XCTAssertTrue(cmdError == CommandError.paramInvalid("param1"))
         }
     }
     
-    func testIgnoringSlash()throws {
+    func testIgnoringSlash() throws {
         let collection = CommandCollection()
         collection.commands.append(LowPermission(completion: LowPermission.complete))
         collection.commands.append(HighPermission(completion: HighPermission.complete))
         collection.commands.append(NoParam(completion: NoParam.complete))
         
         do{
-            try collection.execute(collection.commands.first!, with: "low param1: abc param3: 1.1 param4: Lol", highestPermission: .none)
+            try collection.execute(collection.commands.first!, with: "low param1: abc param3: 13.2 param4: Lol", highestPermission: .none)
         } catch let error {
             let cmdError = error as? CommandError
             XCTAssertTrue(cmdError == CommandError.missingSlash)
+        }
+    }
+    
+    func testInvalidValue() throws {
+        let collection = CommandCollection()
+        collection.commands.append(LowPermission(completion: LowPermission.complete))
+        collection.commands.append(HighPermission(completion: HighPermission.complete))
+        collection.commands.append(NoParam(completion: NoParam.complete))
+        
+        do{
+            try collection.execute(collection.commands[1], with: "/high param1: true param3: 13.0 param4: Lol", highestPermission: .admin)
+        } catch let error {
+            let cmdError = error as? CommandError
+            XCTAssertTrue(cmdError == CommandError.paramInvalid("param3"))
         }
     }
 }
@@ -207,8 +221,8 @@ class HighPermission: Command {
     var parameters: [CommandParameter] = [
         CommandParameter(id: 0, name: "param1", description: "", datatype: .bool, required: true),
         CommandParameter(id: 1, name: "param2", description: "", datatype: .int, required: false),
-        CommandParameter(id: 2, name: "param3", description: "", datatype: .double, required: true),
-        CommandParameter(id: 3, name: "param4", description: "", datatype: .string, required: true)
+        CommandParameter(id: 2, name: "param3", description: "", datatype: .double, defaultValues: ["13.2", "14.4", "17.3"], enforceDefault: true, required: true),
+        CommandParameter(id: 3, name: "param4", description: "", datatype: .string, required: true),
     ]
     
     var minPermissions: Permission = .ban

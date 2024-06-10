@@ -67,7 +67,7 @@ public final class CommandCollection {
     }
     
     ///generate the regex to parse the parameters
-    private func genCommandRegex(for command: any Command)-> String {
+    private func genCommandRegex(for command: any Command) -> String {
         var closure = ""
         for i in 0 ..< command.parameters.count {
             closure += " \(command.parameters[i].name):"
@@ -78,7 +78,7 @@ public final class CommandCollection {
         return "(\(closure)).*?(?=\(closure)|$)"
     }
     
-    private func matchRanges(for input: String, with regex: String)throws -> [Regex<AnyRegexOutput>.Match] {
+    private func matchRanges(for input: String, with regex: String) throws -> [Regex<AnyRegexOutput>.Match] {
         do{
             return try input.matches(of: Regex(regex))
         }
@@ -87,7 +87,7 @@ public final class CommandCollection {
         }
     }
     
-    private func matches(from string: String, for range: [Regex<AnyRegexOutput>.Match])-> [String] {
+    private func matches(from string: String, for range: [Regex<AnyRegexOutput>.Match]) -> [String] {
         return range.map({matchRange in
             return string[matchRange.range].trimmingCharacters(in: .whitespacesAndNewlines)
         })
@@ -100,7 +100,7 @@ public final class CommandCollection {
         }
     }
     
-    private func checkRequiredExist(_ required: [CommandParameter], in matches: [String])throws {
+    private func checkRequiredExist(_ required: [CommandParameter], in matches: [String]) throws {
         for require in required {
             if !matches.contains(where: {$0.starts(with: require.name)}){
                 throw CommandError.missingParameter
@@ -109,30 +109,33 @@ public final class CommandCollection {
     }
     
     ///tries to convert a value to the required type, returns on success
-    private func paramValue(with type: CommandParameterDatatype, for valString: String, named name: String)throws -> Any {
+    private func paramValue(with param: CommandParameter, for valString: String, named name: String) throws -> Any {
         let valueString = valString.trimmingCharacters(in: .whitespacesAndNewlines)
-        switch type {
+        switch param.datatype {
         case .int:
-            guard let value = Int(valueString) else{
-                throw CommandError.paramInvalidType(name)
+            guard let value = Int(valueString), valueValid(value: valueString, parameter: param) else{
+                throw CommandError.paramInvalid(name)
             }
             return value
         case .string:
+            guard valueValid(value: valueString, parameter: param) else {
+                throw CommandError.paramInvalid(name)
+            }
             return valueString
         case .double:
-            guard let value = Double(valueString.replacingOccurrences(of: ",", with: ".")) else{
-                throw CommandError.paramInvalidType(name)
+            guard let value = Double(valueString.replacingOccurrences(of: ",", with: ".")), valueValid(value: valueString, parameter: param) else {
+                throw CommandError.paramInvalid(name)
             }
             return value
         case .bool:
             guard let value = Bool(valueString) else{
-                throw CommandError.paramInvalidType(name)
+                throw CommandError.paramInvalid(name)
             }
             return value
         }
     }
     
-    private func paramDictionary(for matches: [String], with parameters: [CommandParameter])throws -> [String: Any] {
+    private func paramDictionary(for matches: [String], with parameters: [CommandParameter]) throws -> [String: Any] {
         var paramDictionary: [String: Any] = [:]
         
         for match in matches{
@@ -140,15 +143,28 @@ public final class CommandCollection {
             
             //name of the parameter
             let name = String(match[match.startIndex...nameEndIndex])
-            let type = parameters.first(where: {$0.name == name})!.datatype
+            let param = parameters.first(where: {$0.name == name})!
             
             let valueStartIndex = match.index(match.firstIndex(of: ":")!, offsetBy: 1)
             let valueString = String(match[valueStartIndex ..< match.endIndex])
             
-            let value = try paramValue(with: type, for: valueString, named: name)
+            let value = try paramValue(with: param, for: valueString, named: name)
             
             paramDictionary[name] = value
         }
         return paramDictionary
+    }
+    
+    private func valueValid(value: String, parameter: CommandParameter) -> Bool {
+        switch parameter.datatype {
+            case .bool:
+                return true
+            case .int:
+                return !parameter.enforceDefault || parameter.defaultValues.contains(where: {$0 == value})
+            case .string:
+                return !parameter.enforceDefault || parameter.defaultValues.contains(where: {$0 == value})
+            case .double:
+                return !parameter.enforceDefault || parameter.defaultValues.contains(where: {$0 == value})
+        }
     }
 }
