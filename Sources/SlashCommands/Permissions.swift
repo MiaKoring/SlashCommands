@@ -10,4 +10,5 @@ public enum Permission: Int, Equatable, Codable {
     case modifyRoles ///allowed to modify roles
     case admin ///user has admin permissions
     case owner ///user is owner
+    case system ///command gets executed by the system
 }

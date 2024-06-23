@@ -33,18 +33,26 @@ https://github.com/MiaKoring/SwiftSlashCommands
 ## Getting Started
 
 Import SlashCommands
+
 ```swift
 import SlashCommands
 ```
 
 Create a Command
+
 ```swift
 class Example: Command {
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
     }
     
+    var id: UUID = UUID()
+    
+    var userAccessible = true //false if this should be a system intern command which only the code can execute
+    
     var command: String = "example"
+    
+    var description = "description of what the command does"
     
     var parameters: [CommandParameter] = [ //enter as many parameters as you like or leave empty
         CommandParameter(id: 0, name: "param1", datatype: .bool, required: true), //throws an error if not included in the executed command
@@ -77,6 +85,7 @@ let collection = CommandCollection()
 collection.commands.append(Example(completion: Example.complete))
 ```
 Get commands for an input string and permissionlevel
+
 ```swift
 //get all commands that you are allowed to use with .none permissions
 let commands = collection.commands(for: "/", highestPermission: .none)
@@ -95,6 +104,7 @@ let commands = collection.commands(for: "/example param1:", highestPermission: .
 //commands contains [Example] now
 ```
 Execute a command
+
 ```swift
 try collection.execute(collection.commands.first!, with: "/example param1: false", highestPermission: .none)
 //prints in the console:
@@ -103,6 +113,7 @@ try collection.execute(collection.commands.first!, with: "/example param1: false
 //-------------------------------------------
 ```
 Errorhandling
+
 ```swift
 //the following errors can be thrown
 public enum CommandError: Error, Equatable{

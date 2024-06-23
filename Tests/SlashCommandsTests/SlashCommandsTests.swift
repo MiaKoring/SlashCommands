@@ -155,10 +155,40 @@ final class SwiftSlashCommandsTests: XCTestCase {
             XCTAssertTrue(cmdError == CommandError.paramInvalid("param3"))
         }
     }
+    
+    func testSystemCommand() throws {
+        let collection = CommandCollection()
+        collection.commands.append(SystemCommand(completion: SystemCommand.complete))
+        
+        try collection.execute(collection.commands[0], with: "/sys", highestPermission: .system)
+        
+    }
+    
+    func testSystemCommandWithOwner() throws {
+        let collection = CommandCollection()
+        collection.commands.append(SystemCommand(completion: SystemCommand.complete))
+        do {
+            try collection.execute(collection.commands[0], with: "/sys", highestPermission: .owner)
+        } catch let error {
+            let cmdError = error as? CommandError
+            XCTAssertTrue(cmdError == CommandError.insufficientPermissions)
+        }
+    }
+    
+    func testGetSystemCommand() {
+        let collection = CommandCollection()
+        collection.commands.append(SystemCommand(completion: SystemCommand.complete))
+        
+        let res = collection.commands(for: "sys", highestPermission: .owner)
+        
+        XCTAssertTrue(res.isEmpty)
+    }
 }
 
 class LowPermission: Command {
     var id: UUID = UUID()
+    
+    var userAccessible: Bool = true
     
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
@@ -210,6 +240,8 @@ class LowPermission: Command {
 class HighPermission: Command {
     var id: UUID = UUID()
     
+    var userAccessible: Bool = true
+    
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
     }
@@ -257,6 +289,8 @@ class HighPermission: Command {
 class NoParam: Command {
     var id: UUID = UUID()
     
+    var userAccessible: Bool = true
+    
     init(completion: @escaping ([String : Any]) -> Void) {
         self.completion = completion
     }
@@ -277,6 +311,37 @@ class NoParam: Command {
         print("\n\n\n")
         print("-------------------------------------------")
         print("noParam executed")
+        print("-------------------------------------------")
+        print("\n\n\n")
+    }
+    
+}
+
+class SystemCommand: Command {
+    var id: UUID = UUID()
+    
+    var userAccessible: Bool = false
+    
+    init(completion: @escaping ([String : Any]) -> Void) {
+        self.completion = completion
+    }
+    
+    var command: String = "sys"
+    
+    var description: String = "system intern command"
+    
+    var parameters: [SlashCommands.CommandParameter] = []
+    
+    var minPermissions: SlashCommands.Permission = .system
+    
+    var commandOwner: String = "SwiftSlashCommands"
+    
+    var completion: ([String : Any]) -> Void
+    
+    public static func complete(_ : [String:Any])-> Void {
+        print("\n\n\n")
+        print("-------------------------------------------")
+        print("systemCommand executed")
         print("-------------------------------------------")
         print("\n\n\n")
     }

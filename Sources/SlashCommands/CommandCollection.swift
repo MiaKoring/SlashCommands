@@ -21,7 +21,7 @@ public final class CommandCollection {
         
         //filter out commands by name and permission
         return commands.filter({
-            $0.command.starts(with: cmdInput) && $0.minPermissions.rawValue <= highestPermission.rawValue
+            $0.command.starts(with: cmdInput) && $0.minPermissions.rawValue <= highestPermission.rawValue && $0.userAccessible
         })
     }
     

@@ -6,6 +6,8 @@ public protocol Command: Identifiable {
     
     var id: UUID { get }
     
+    var userAccessible: Bool { get }
+    
     ///commandname, used /commandname
     var command: String { get }
     
